@@ -1,0 +1,202 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 4: Visualization</title>
+</head>
+
+<style>
+
+text.mono {
+        font-size: 9pt;
+        font-family: Consolas, courier;
+}
+
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+.q0-9 { fill:rgb(227,227,237); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+
+</style>
+
+<body>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="page-header center">
+                <h1>Part 2: <small>Geomapping Tweet Sentiment</small></h1>
+            </div>
+
+            
+              
+            <h2> Finding sentiments of counties</h2>
+			<p> In this part, I found the average sentiment of counties in the US. I again used over 350,000 US tweets in English collected from the Twitter Stream API from Jan 28, 2014 to Feb 25, 2014 to make my calculations. I extracted the latitude and longitude from the JSON objects in this file as well as a text. I used a logistic regression classifier to determine the probability that a tweet was positive (by first training the classifier on an input set and then passing in the text of my test tweet). I output these probabilities to a csv file which had the latitude, longitude, and probability of being positive for each tweet in the set. 
+			</p>
+      <p> Using this data, I then used the Data Science Toolkit api to determine the county from latitude and longitude. I was then able to find the average sentiment by adding up all the tweets from the same county and dividing by the number of tweets from that county. I visualized this data in the map below</p>
+      <h2> Sentiment Visualization</h2>
+      <div id="gMap"> </div>
+      <p> The map above shows how positive on average tweets were from a certain place. The most happy counties are the darkest and the least happy are the lightest. For those counties that had no data (or fewer than five tweets), the color is extremely light. Hover over a county (which had data) to find the name of the county. </p>
+			
+      <h2> Happiest and Least Happy Counties</h2>
+      <p> I found that my least happy and most happy counties were as follows. I was able to determine these counties by creating a dictionary of all the counties I had data for and their sentiment score and sorting it to get the top and bottom most. The least happy county was Watonwan (contains the city of St. James, Minnesota) with an average probability of being positive of .22 and the most happy county was Twin Falls (countains the city of Twin Falls, Idaho) with an average probability of being positive of.85.  </p>
+      <p> Least happy counties </p>
+      <pre>'Watonwan', '0.22422729399'
+'Rio Arriba', '0.249730323323'
+'Laclede', '0.252678408638'
+'Ripley', '0.267902898267'
+'McDowell', '0.278160693466'
+'Nava, Coahuila de Zaragoza', '0.306456100699'
+'King George', '0.308845060139'
+'Letcher', '0.309262082044'
+'Glades', '0.309349508785' </pre>
+ <p> Most happy counties </p>
+ <pre>'Twin Falls', '0.854831732645'
+'Valley', '0.805799315928'
+'Wasatch', '0.802139063481'
+'McNairy', '0.770085420943'
+'Poinsett', '0.765871705306'
+'Tippah', '0.75901219359'
+'Gila', '0.747455496088'
+'Sheridan', '0.746556661889'
+'Armstrong', '0.743175468619' </pre>
+<p> Below are some example negative tweets from the least positive counties. I was able to find these by doing a twitter search within the dates range of my data and within the location specified. It's interesting to note that Watonwan county schools have a record of cyber-bullying, something which is potentially reflected in the tweets. Just <a href="http://www.news8000.com/news/minn-looks-to-pass-antibullying-bill/24945930">last month</a>, the county tried to pass an anti-bullying bill. </p>
+<pre>i hate when my friends are sad i hate it i hate it i hate it
+I REALLY CAN'T STAND GIRLS WHO TALK BAD ABOUT THEIR "BEST FRIENDS" BEHIND THEIR BACKS. YOU'RE HIGHLY ANNOYING.
+I hate when people constantly have something bad to say about you or constantly comments about something about you #sitdown #meanie
+I hope someday you feel the pain you put me through.</pre>
+<p> Below are some example positive tweets from the most positive counties. These I found in a similar manner. It is also interesting to note that Wasatch County, Utah(my former home!) had a very high score. This could be because it is home to some of the best ski resorts in the country, so many people tweeting from there are on vacation skiing, which would contribute to the positive score.  </p>
+<pre>Ski Day #16 Alta is too good to me. Had so much fun shredding with my Pops @chubba_smith (some people… http://instagram.com/p/kvBALxqPP9/
+Glad I got a call from you today. It meant the world. You always make me laugh. Love and miss you Daddy😘🎈☺️ pic.twitter.com/0FqNsoJpv6
+Appreciation tweet to how gorgeous the city of salt lake is pic.twitter.com/f6ioSjcq8t
+Utah I fall more and more in love with you everyday. Last nights sunset was perfection🌞 @ Salt Lake… http://instagram.com/p/kzbSlly8Cu/
+Waking up next to my sweetie is the best feeling ever. 💕
+Thank you to the best date I could ever ask for! Last night was amazing! Love you @AvreyEvans pic.twitter.com/btUR0vlU3l
+Ciao @StRegisDV and @skideervalley - Amazing 4 days skiing. Best ski resort in North America - hands down!</pre>
+  <p> In terms of states as a whole, Arizona was very happy (seen by the visualization on the map). In a <a href="http://www.livescience.com/9785-happiest-states-pinned.html"> study</a>, it was found that Arizona is the 5th happiest state scoring high based on good air quality and nice weather as well as having a lack of crowds. West Virginia, on the other hand, appears to be lower in happiness. This could be because it was last in terms of "life evaluation" and "emotional health" according to a <a href="http://www.washingtonpost.com/blogs/the-fix/wp/2014/03/02/west-virginia-is-the-most-miserable-state-in-the-country/"> Washington Post Study</a>. 
+    <p> Based on the criteria of this study, I would guess there is a correlation between tweet sentiments and the household income and weather. Additional factors like job satisfaction, crowdedness and phyical health also affect the sentiment of the counties. It is fitting that this is reflected in the tweets. It is important to keep this in context of the assignment: twitter users are not necessarily a complete reflection of the population, but there is probably a correlation. </p>
+        <div class="col-md-2"></div>
+    </div>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script>
+
+//note: the code from http://bl.ocks.org/mbostock/4060606 was taken and modified to fit the purposes of this assignment
+    var width = 960,
+        height = 750;
+
+    var rateById = d3.map();
+
+    var rateByName=d3.map(); //keeps track of the names
+
+    var quantize = d3.scale.quantize()
+        .domain([0, .65])
+        .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+    var projection = d3.geo.albersUsa() //getsthe map
+        .scale(1280)
+        .translate([width / 2, height / 2]);
+
+    var path = d3.geo.path()
+        .projection(projection);
+
+    var svg = d3.select("#gMap").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    queue()
+        .defer(d3.json, "data/us.json")
+        .defer(d3.tsv, "output.tsv", function(d) { rateById.set(d.id, +d.sent); rateByName.set(d.id, d.name);})
+        .await(ready);
+
+    function ready(error, us) {
+      svg.append("g")
+          .attr("class", "counties")
+        .selectAll("path")
+          .data(topojson.feature(us, us.objects.counties).features)
+        .enter()
+          .append("path")
+            .attr("class", function(d) { return quantize(rateById.get(d.id)); })
+            .attr("d", path)
+          .append("title") //adds the hovering effect
+            .text(function(d){ return rateByName.get(d.id); });
+        
+      svg.append("path")
+          .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+          .attr("class", "states")
+          .attr("d", path);
+     
+    }
+
+
+    list=[0,1,2,3,4,5,6,7,8] //have 9 different categories
+  
+
+    //adds the legend
+    gridSize = Math.floor(width / 24);
+    legendElementWidth = gridSize*2;
+    var legend = svg.selectAll(".legend")
+        .data([0,1,2,3,4,5,6,7,8])
+              .enter().append("g")
+              .attr("class", "legend");
+
+          legend.append("rect")
+            .attr("x", function(d, i) { return legendElementWidth * i+50; })
+            .attr("y", height-50)
+            .attr("width", legendElementWidth)
+            .attr("height", gridSize / 2)
+            .style("fill", function(d, i) {  //set fill according to which bucket
+              switch(i){
+                case 0:
+                 return "rgb(247,251,255)"; 
+                case 1:
+                 return "rgb(222,235,247)"; 
+                case 2: 
+                 return "rgb(198,219,239)"; 
+                case 3:
+                 return 'rgb(158,202,225)'; 
+                case 4:
+                 return 'rgb(107,174,214)'; 
+                case 5:
+                 return 'rgb(66,146,198)'; 
+                case 6:
+                 return 'rgb(33,113,181)'; 
+                case 7:
+                 return 'rgb(8,81,156)'; 
+                case 8:
+                 return 'rgb(8,48,107)'; 
+              }
+             });
+          legend.append("text")
+            .attr("class", "mono")
+            .text(function(d,i) {  
+              if (i==0){ return "no data";} //set labels for certain elements
+              if (i==1) { return "least happy";}
+              if (i==8) {return "most happy";}
+             })
+            .attr("x", function(d, i) { return legendElementWidth * i+50; })
+            .attr("y", height-10);
+    d3.select(self.frameElement).style("height", height + "px");
+
+</script>
+
+</body>
+</html>
